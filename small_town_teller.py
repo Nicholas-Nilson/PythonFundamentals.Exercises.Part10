@@ -1,3 +1,6 @@
+import pickle
+
+
 class Person:
     def __init__(self, p_id, f_name, l_name):
         self.id = p_id
@@ -22,7 +25,7 @@ class Bank:
         self.bank_details = {'customer_id_count': 0, 'account_count' : 1000}  # may be unnecessary, but we will see when it comes time for persistence
 
     def add_customer(self, new_customer):
-        if person1 not in self.customers.values():
+        if new_customer not in self.customers.values():
             self.bank_details.update({'customer_id_count': self.bank_details.get('customer_id_count') + 1})
             self.customers.update({self.bank_details.get('customer_id_count'): new_customer})
 
@@ -34,7 +37,8 @@ class Bank:
             self.bank_details.update({'account_count': self.bank_details.get('account_count') + 1})
             account.acc_number = self.bank_details.get('account_count') +1
             acc_entry = {self.bank_details.get('account_count'): account}
-            self.accounts.update(acc_entry)
+            # self.accounts.update(acc_entry)
+            self.accounts[self.bank_details.get('account_count')] = account
             print(f"Hi {account.owner.first_name.capitalize()} {account.owner.last_name.capitalize()}!\n"
                   f"Your {account.acc_type} account number is: {self.bank_details.get('account_count')}")
         elif account in self.accounts.values():
@@ -73,17 +77,40 @@ class Bank:
               f"${acc_balance}")
         # print(f"{balance}") # so it looks better in other methods
 
+    def save_data(self):
+        PersistenceUtils.write_pickle(self)
 
-nick_bank = Bank('nick')
-person1 = Person(1, 'nick', 'nilson')
-nick_bank.add_customer(person1)
-nick_bank.add_customer(person1)
-print(nick_bank.bank_details.get('customer_id_count'))
-nick_acc = Account("Checking", person1)
-nick_acc2 = Account("Savings", person1)
-nick_bank.add_account(nick_acc)
-nick_bank.add_account(nick_acc2)
-# nick_bank.remove_account(1001)
-nick_bank.deposit_money(1001, 200.60)
-nick_bank.balance_inquiry(1001)
-nick_bank.withdraw_money(1001, 2)
+    def load_data(self):
+        return PersistenceUtils.load_pickle()
+
+
+class PersistenceUtils():
+
+    def write_pickle(self,  data_to_pickle):
+        with open('persistent_small_town_teller.pickle', 'wb') as f:
+            pickle.dump(data_to_pickle, f)
+
+    def load_pickle(self):
+        pickle_data = None
+        with open('persistent_small_town_teller.pickle', 'rb') as f:
+            while True:
+                try:
+                    pickle_data = pickle.load(f)
+                except EOFError:
+                    break
+        return pickle_data
+
+
+# nick_bank = Bank('nick')
+# person1 = Person(1, 'nick', 'nilson')
+# nick_bank.add_customer(person1)
+# nick_bank.add_customer(person1)
+# print(nick_bank.bank_details.get('customer_id_count'))
+# nick_acc = Account("Checking", person1)
+# nick_acc2 = Account("Savings", person1)
+# nick_bank.add_account(nick_acc)
+# nick_bank.add_account(nick_acc2)
+# # nick_bank.remove_account(1001)
+# nick_bank.deposit_money(1001, 200.60)
+# nick_bank.balance_inquiry(1001)
+# nick_bank.withdraw_money(1001, 2)
