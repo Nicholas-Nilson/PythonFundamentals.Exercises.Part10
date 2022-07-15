@@ -23,7 +23,8 @@ class Bank:
         self.customers = {}  # ID: name
         self.accounts = {}
         self.bank_details = {'customer_id_count': 0, 'account_count' : 1000}  # may be unnecessary, but we will see when it comes time for persistence
-        self.persistence = PersistenceUtils
+        # self.persistence = PersistenceUtils
+
     def add_customer(self, new_customer):
         if new_customer not in self.customers.values():
             self.bank_details.update({'customer_id_count': self.bank_details.get('customer_id_count') + 1})
