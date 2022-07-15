@@ -23,7 +23,7 @@ class Bank:
         self.customers = {}  # ID: name
         self.accounts = {}
         self.bank_details = {'customer_id_count': 0, 'account_count' : 1000}  # may be unnecessary, but we will see when it comes time for persistence
-
+        self.persistence = PersistenceUtils
     def add_customer(self, new_customer):
         if new_customer not in self.customers.values():
             self.bank_details.update({'customer_id_count': self.bank_details.get('customer_id_count') + 1})
@@ -78,24 +78,37 @@ class Bank:
         # print(f"{balance}") # so it looks better in other methods
 
     def save_data(self):
-        PersistenceUtils.write_pickle(self)
+        with open('/Users/nick/Python/Labs/PythonFundamentals.Exercises.Part10/persistent_small_town_teller.pickle',
+                  'wb') as f:
+            pickle.dump(self, f)
 
     def load_data(self):
-        return PersistenceUtils.load_pickle()
-
-
-class PersistenceUtils():
-
-    def write_pickle(self,  data_to_pickle):
-        with open('persistent_small_town_teller.pickle', 'wb') as f:
-            pickle.dump(data_to_pickle, f)
-
-    def load_pickle(self):
         pickle_data = None
-        with open('persistent_small_town_teller.pickle', 'rb') as f:
+        with open('/Users/nick/Python/Labs/PythonFundamentals.Exercises.Part10/persistent_small_town_teller.pickle',
+                  'rb') as f:
             while True:
                 try:
                     pickle_data = pickle.load(f)
+                    break
+                except EOFError:
+                    break
+        self.accounts = pickle_data.accounts
+        self.customers = pickle_data.customers
+        self.bank_details = pickle_data.bank_details
+
+class PersistenceUtils():
+
+    def write_pickle(data_to_pickle):
+        with open('/Users/nick/Python/Labs/PythonFundamentals.Exercises.Part10/persistent_small_town_teller.pickle', 'wb') as f:
+            pickle.dump(data_to_pickle, f)
+
+    def load_pickle():
+        pickle_data = None
+        with open('/Users/nick/Python/Labs/PythonFundamentals.Exercises.Part10/persistent_small_town_teller.pickle', 'rb') as f:
+            while True:
+                try:
+                    pickle_data = pickle.load(f)
+                    break
                 except EOFError:
                     break
         return pickle_data
