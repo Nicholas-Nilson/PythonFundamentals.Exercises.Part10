@@ -26,7 +26,7 @@ Declare a **Bank** class able to support the following operations:
 * Withdrawing money from an account
 * Balance inquiry for a particular account
 
-From an interactive terminal, you should be able to import these classes an interact with the objects and methods defined above.
+From an interactive terminal, you should be able to import these classes and interact with the objects and methods defined above.
 
 **Constraints**
 
