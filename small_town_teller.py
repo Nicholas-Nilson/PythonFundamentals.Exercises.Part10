@@ -10,7 +10,7 @@ class Account:
         self.acc_number = None
         self.acc_type = account_type
         self.owner = owner
-        self.balance = None
+        self.balance = 0
         # self.details = {'owner': owner, 'acc_type': account_type, 'balance': None}
 
 
@@ -43,20 +43,37 @@ class Bank:
             print("Please register with the bank first.")
 
     def remove_account(self, account):
-        self.accounts = {key:val for key, val in self.accounts.items() if val != account}
-        print('Your account has been deleted."')
+        # self.accounts = {key:val for key, val in self.accounts.items() if val != account}
+        key_to_del = account
+        del self.accounts[key_to_del]
+        print(f'Your account [number: {account}] has been deleted."')
 
-    def deposit_money(self, customer, account, amount):
-        pass
+    # probably a few ways to do this, cloning the acct & recreating it seems wasteful to just update the balance.
+    def deposit_money(self, account, amount):
+        acct = self.accounts[account]
+        acct.balance += amount
+        self.accounts.update({account: acct})
+        # self.accounts.update({account: })
+        print(f"Your deposit of {amount} has been added to account # {account}")
+        # print(f"Your new balance is: {self.balance_inquiry(account)}")
 
-    def withdraw_money(self, customer, account, amount):
-        pass
+    def withdraw_money(self, account, amount):
+        acct = self.accounts[account]
+        acct.balance -= amount
+        self.accounts.update({account: acct})
+        # self.accounts.update({account: })
+        print(f"You have withdrawn ${amount} from account # {account}")
+        print(f"New balance is ${acct.balance}")
 
-    def balance_inquiry(self, customer, account):
-        pass
+    def balance_inquiry(self, account):
+        acct = self.accounts[account]
+        acc_type = acct.acc_type
+        acc_balance = acct.balance
+        print(f"Balance for {acc_type} account number {account}:\n"
+              f"${acc_balance}")
+        # print(f"{balance}") # so it looks better in other methods
 
-#
-#
+
 nick_bank = Bank('nick')
 person1 = Person(1, 'nick', 'nilson')
 nick_bank.add_customer(person1)
@@ -66,4 +83,7 @@ nick_acc = Account("Checking", person1)
 nick_acc2 = Account("Savings", person1)
 nick_bank.add_account(nick_acc)
 nick_bank.add_account(nick_acc2)
-
+# nick_bank.remove_account(1001)
+nick_bank.deposit_money(1001, 200.60)
+nick_bank.balance_inquiry(1001)
+nick_bank.withdraw_money(1001, 2)
