@@ -1,25 +1,45 @@
 import pickle
 
+# people = {}
 
 class Person:
     def __init__(self, p_id, f_name, l_name):
         self.id = p_id
         self.first_name = f_name
         self.last_name = l_name
+        people[id] = self
 
 
 class Account:
     def __init__(self, account_type, owner):
         self.acc_number = None
         self.acc_type = account_type
-        self.owner = owner
+        self.owner = people[owner.id]
         self.balance = 0
         # self.details = {'owner': owner, 'acc_type': account_type, 'balance': None}
 
 
+## thought this might work for saving people, but then they would just be an array of people inside of the declared bank
+# def save_people_data():
+#     with open('/Users/nick/Python/Labs/PythonFundamentals.Exercises.Part10/persistent_small_town_teller_ppl.pickle',
+#               'wb') as f:
+#         pickle.dump(people, f)
+#
+# def load_people_data():
+#     pickle_data = None
+#     with open('/Users/nick/Python/Labs/PythonFundamentals.Exercises.Part10/persistent_small_town_teller_ppl.pickle',
+#               'rb') as f:
+#         while True:
+#             try:
+#                 pickle_data = pickle.load(f)
+#                 break
+#             except EOFError:
+#                 break
+#     return pickle_data
+
+
 class Bank:
-    def __init__(self, bank_name):
-        self.name = bank_name
+    def __init__(self):
         self.customers = {}  # ID: name
         self.accounts = {}
         self.bank_details = {'customer_id_count': 0, 'account_count' : 1000}  # may be unnecessary, but we will see when it comes time for persistence
@@ -37,7 +57,7 @@ class Bank:
         if account.owner in self.customers.values() and account not in self.accounts.values():
             self.bank_details.update({'account_count': self.bank_details.get('account_count') + 1})
             account.acc_number = self.bank_details.get('account_count') +1
-            acc_entry = {self.bank_details.get('account_count'): account}
+            # acc_entry = {self.bank_details.get('account_count'): account}
             # self.accounts.update(acc_entry)
             self.accounts[self.bank_details.get('account_count')] = account
             print(f"Hi {account.owner.first_name.capitalize()} {account.owner.last_name.capitalize()}!\n"
