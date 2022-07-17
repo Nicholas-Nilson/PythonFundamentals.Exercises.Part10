@@ -86,7 +86,8 @@ class Bank:
         acct = self.accounts[account]
         acct.balance -= amount
         self.accounts.update({account: acct})
-        # self.accounts.update({account: })
+        self.accounts.update({account: })
+        # self.deposit_money(account, -amount)
         print(f"You have withdrawn ${amount} from account # {account}")
         print(f"New balance is ${acct.balance}")
 
@@ -148,3 +149,4 @@ class PersistenceUtils():
 # nick_bank.deposit_money(1001, 200.60)
 # nick_bank.balance_inquiry(1001)
 # nick_bank.withdraw_money(1001, 2)
+
